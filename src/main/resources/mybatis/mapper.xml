@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whxh.mapper.EmpMapper">
+    <resultMap id="resultMapEmp" type="com.whxh.entity.Emp" >
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="age" column="age"/>
+        <result property="address" column="address"/>
+        <result property="birthday" column="birthday" javaType="java.sql.Date"/>
+    </resultMap>
+    <select id="SelOne" parameterType="int" resultMap="resultMapEmp">
+            select * from emp where id = #{id}
+    </select>
+    <!--查询所有信息-->
+    <select id="SelEmpAll" resultMap="resultMapEmp" parameterType="Params">
+            select * from emp
+            <where>
+                <if test="name!=null and name!='' ">
+                    and name like concat('%',#{name},'%')
+                </if>
+                <if test="ageFrom!=0 ">
+                    and age &gt;= #{ageFrom}
+                </if>
+                <if test="ageTo!=0 ">
+                    and age &lt;= #{ageTo}
+                </if>
+                <if test="address!=null and address!='' ">
+                    and address like concat('%',#{address},'%')
+                </if>
+                <if test="birthdayFrom!=null">
+                    and birthday &gt;= #{birthdayFrom}
+                </if>
+                <if test="birthdayTo!=null">
+                    and birthday &lt;= #{birthdayTo}
+                </if>
+                <if test="grade!=null and grade!=''">
+                    and grade like concat('%',#{grade},'%')
+                </if>
+
+            </where>
+    </select>
+    <!--添加信息-->
+    <insert id="InsertOne" >
+        insert into emp(name, age, address, birthday, grade) values (#{name},#{age},#{address},#{birthday},#{grade})
+    </insert>
+    <!--修改信息-->
+    <update id="UpdateOne">
+        update emp
+            set
+            name=#{name},age=#{age},address=#{address},birthday=#{birthday},grade=#{grade}
+            where
+            id=#{id}
+    </update>
+    <!--删除信息-->
+    <delete id="DeleteOne">
+         delete from emp where id = #{id}
+    </delete>
+</mapper>
